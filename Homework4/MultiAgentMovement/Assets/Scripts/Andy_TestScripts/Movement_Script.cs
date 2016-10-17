@@ -96,7 +96,7 @@ public class Movement_Script : MonoBehaviour {
 				// have overall group leader follow the path
 				target = rayCastDir() +  pathFollow () * pathFollowWeight;
 			}
-			else { // mvoement of group members
+			else { // movement of group members
 				
 				// find a leader to follow
 				if(leader == null) {
@@ -184,18 +184,19 @@ public class Movement_Script : MonoBehaviour {
 		Vector3 target = Vector3.zero;
 
 		// raycast to see if there is an object that is not part of the fomration that's in the way
-		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.zero, 100f);
+		RaycastHit2D hit = Physics2D.Raycast (transform.position, Vector2.zero, 10f);
 		if(hit.collider != null && hit.collider.gameObject.tag != groupTag) {
-			Debug.Log ( this.gameObject.name + " hit");
+			//Debug.Log ( this.gameObject.name + " hit");
 
 			Vector3 hitPosition = hit.collider.transform.position;
 			target = hitPosition + hitPosition.normalized * avoidDistance;
 
+			// if the ray has hit something ignore emergence and focus on avoiding the wall in front
 			if(!followPath) {
 				emergenceWeight = 0;
 			}
 		}
-		else if(hit.collider == null) {
+		else if(hit.collider == null) { // else if not in danger of hitting anything then go back to following leader
 			emergenceWeight = tempEmergenceWeight;
 		}
 
@@ -223,7 +224,7 @@ public class Movement_Script : MonoBehaviour {
 		// pick a member in the group to follow
 		while(!haveLeader) {
 			// find a random member in the group
-			int index = Random.Range (0, groupMembers.Length);
+			int index = Random.Range (0, groupMembers.Length-1);
 
 			// exclude this gameobject
 			if(groupMembers[index] != this.gameObject) {
@@ -231,7 +232,7 @@ public class Movement_Script : MonoBehaviour {
 				GameObject temp = groupMembers [index].GetComponent<Movement_Script> ().setChild ();
 
 				if(temp != null) {
-					Debug.Log ("follow: " + temp.name);
+					//Debug.Log ("follow: " + temp.name);
 					leader = temp;
 					haveLeader = true;
 				}
@@ -242,16 +243,19 @@ public class Movement_Script : MonoBehaviour {
 	// find a spot behind the leader
 	private Vector3 spotBehindLeader() {
 
+		Vector3 spot = Vector3.zero;
+
 		// if the one the gameobject has been following has been killed find a new
-		//
 		if(leader == null) {
 			findLeader ();
 		}
-
-		Vector3 spot = Vector3.zero;
-
+			
 		spot = leader.transform.position - (leader.transform.forward * distance);
 		spot.z = 0;
+
+		// get a random x value in range to differ from the leader's
+		float xValue = leader.transform.position.x;
+		spot.x = Random.Range (xValue - 1, xValue + 1);
 
 		return spot;
 	}
