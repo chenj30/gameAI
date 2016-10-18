@@ -9,11 +9,15 @@ public class BoidMovement : MonoBehaviour {
 	[Header("Pathfinding")]
 	public PathDrawer path;
 	public float nodeArriveRadius = 1;
+	[Header("Formation")]
+	public GameObject[] followers;
 
 	private Vector3 _velocity = new Vector3(1, 0);
 	public Vector3 Velocity { get { return _velocity; } }
 	private Vector3 _acceleration = Vector3.zero;
 	public Vector3 Acceleration { get { return _acceleration; } }
+	private Vector3[] _formationSlots;
+	public Vector3[] FormationSlots { get { return _formationSlots; } }
 
 	private int _currentNode = 0;
 	private Transform _pathTarget;
@@ -70,24 +74,40 @@ public class BoidMovement : MonoBehaviour {
 		else { return Vector3.zero; }
 	}
 
+	void Scalable()
+	{
+		int numFollowers = followers.Length;
+		float formRadius = .5f + (numFollowers / 8) * 1;
+		float angle = 0f;
+		float x = 0, y = 0;
+		for (int i = 0; i < numFollowers; i++ )
+		{
+			x = Mathf.Sin(Mathf.Deg2Rad * angle) * formRadius;
+			y = Mathf.Cos(Mathf.Deg2Rad * angle) * formRadius;
+			_formationSlots[i] = new Vector3(this.transform.position.x + x, this.transform.position.y + y, 0);
+			angle += 360f / numFollowers;
+		}
+		for (int f = 0; f < numFollowers; f++) 
+		{
+			FormationMovement followerScript = followers[f].GetComponent<FormationMovement>();
+			followerScript.DoSeek(_formationSlots[f], followerScript.arriveRadius);
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
+		_formationSlots = new Vector3[followers.Length];
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		Scalable();
+
 		_acceleration = PathFollowing();
 		_acceleration = Clip(_acceleration, maxAcceleration);
 		_velocity = Clip(_velocity + _acceleration, maxSpeed);
 		Debug.DrawLine(this.gameObject.transform.position, this.transform.position + _velocity, Color.red);
-		RaycastHit hitInfo;
-		if (Physics.Raycast(this.transform.position, _velocity, out hitInfo, 2))
-		{
-			Debug.Log(hitInfo.collider.name);
-			_acceleration = Seek(hitInfo.collider.transform.position + (Vector3)hitInfo.normal.normalized * nodeArriveRadius, nodeArriveRadius);
-			_acceleration = Clip(_acceleration, maxAcceleration);
-			_velocity = Clip(_velocity + _acceleration, maxSpeed);
-		}
 		this.transform.position += _velocity;
 
 		float angle = ((Mathf.Atan2(_velocity.y, _velocity.x) * 180) / Mathf.PI) % 360;

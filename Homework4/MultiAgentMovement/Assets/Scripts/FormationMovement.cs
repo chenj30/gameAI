@@ -5,17 +5,15 @@ public class FormationMovement : MonoBehaviour {
 
 	public float maxSpeed = 1;
 	public float maxAcceleration = 1;
-	[Header("Pathfinding")]
-	public PathDrawer path;
-	public float nodeArriveRadius = 1;
+	public float arriveRadius = .5f;
 
 	private Vector3 _velocity = new Vector3(1, 0);
 	public Vector3 Velocity { get { return _velocity; } }
 	private Vector3 _acceleration = Vector3.zero;
 	public Vector3 Acceleration { get { return _acceleration; } }
 
-	private int _currentNode = 0;
-	private Transform _pathTarget;
+	private Vector3 _targetLoc;
+	private float _targetArriveRadius = 0.5f;
 
 	Vector3 Clip(Vector3 vector, float max)
 	{
@@ -42,13 +40,25 @@ public class FormationMovement : MonoBehaviour {
 		return force;
 	}
 
+	public void DoSeek(Vector3 targetLoc, float targetArriveRadius)
+	{
+		_targetLoc = targetLoc;
+		_targetArriveRadius = targetArriveRadius;	
+	}
+
 	// Use this for initialization
 	void Start () {
-	
+		_targetLoc = this.gameObject.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		_acceleration = Seek(_targetLoc, _targetArriveRadius);
+		_acceleration = Clip(_acceleration, maxAcceleration);
+		_velocity = Clip(_velocity + _acceleration, maxSpeed);
+		this.transform.position += _velocity;
+
+		float angle = ((Mathf.Atan2(_velocity.y, _velocity.x) * 180) / Mathf.PI) % 360;
+		this.transform.eulerAngles = new Vector3(0, 0, angle);
 	}
 }
