@@ -40,6 +40,19 @@ public class FormationMovement : MonoBehaviour {
 		return force;
 	}
 
+	Vector3 CheckCollision()
+	{
+		RaycastHit hitInfo;
+		if (Physics.Raycast(this.transform.position, _velocity, out hitInfo, 2))
+		{
+			return Seek(hitInfo.collider.transform.position + hitInfo.normal.normalized * arriveRadius, arriveRadius);
+		}
+		else
+		{
+			return Vector3.zero;
+		}
+	}
+
 	public void DoSeek(Vector3 targetLoc, float targetArriveRadius)
 	{
 		_targetLoc = targetLoc;
@@ -54,6 +67,7 @@ public class FormationMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		_acceleration = Seek(_targetLoc, _targetArriveRadius);
+		_acceleration += CheckCollision();
 		_acceleration = Clip(_acceleration, maxAcceleration);
 		_velocity = Clip(_velocity + _acceleration, maxSpeed);
 		this.transform.position += _velocity;

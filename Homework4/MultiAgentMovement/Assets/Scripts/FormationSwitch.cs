@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class FormationSwitch : MonoBehaviour {
@@ -23,12 +24,14 @@ public class FormationSwitch : MonoBehaviour {
 	{
 		_txtObj.text = "Scalable Formation";
 		// change formation to scalable
+		SceneManager.LoadScene("Johnny_workbench");
 	}
 
 	public void GoToEmerged()
 	{
 		_txtObj.text = "Emerged Formation";
 		// change formation to emgered 
+		SceneManager.LoadScene("Andy_workbench");
 	}
 
 	public void GoToTwoLevel()
