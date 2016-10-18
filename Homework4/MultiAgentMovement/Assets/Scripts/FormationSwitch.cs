@@ -38,6 +38,7 @@ public class FormationSwitch : MonoBehaviour {
 	{
 		_txtObj.text = "Two-Level Formation";
 		// change formation to two-level
+		SceneManager.LoadScene("Leah_workbench");
 	}
 
 }
