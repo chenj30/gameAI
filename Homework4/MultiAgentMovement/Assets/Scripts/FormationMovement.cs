@@ -45,7 +45,7 @@ public class FormationMovement : MonoBehaviour {
 		RaycastHit hitInfo;
 		if (Physics.Raycast(this.transform.position, _velocity, out hitInfo, 2))
 		{
-			return Seek(hitInfo.collider.transform.position + hitInfo.normal.normalized * arriveRadius, arriveRadius);
+			return Seek(_velocity + hitInfo.normal * arriveRadius, arriveRadius);
 		}
 		else
 		{

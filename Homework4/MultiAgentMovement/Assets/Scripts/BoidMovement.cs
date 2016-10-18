@@ -58,7 +58,7 @@ public class BoidMovement : MonoBehaviour {
 			if (Physics.Raycast(this.transform.position, _velocity, out hitInfo, 2))
 			{
 				Debug.Log(hitInfo.collider.name);
-				targetPos = _pathTarget.position + hitInfo.normal.normalized * nodeArriveRadius;
+				targetPos = _pathTarget.position + hitInfo.normal * nodeArriveRadius;
 			}
 			if (calcDistance(this.transform.position, targetPos) <= nodeArriveRadius)
 			{
