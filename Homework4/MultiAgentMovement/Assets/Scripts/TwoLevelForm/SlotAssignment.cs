@@ -18,9 +18,9 @@ public class SlotAssignment : MonoBehaviour {
 		SetSlots(GameObject.FindGameObjectsWithTag("bird").Length, anchor);
 	}
 
-	void SetSlots(int slotsToSet, Transform anchor)
+	public void SetSlots(int slotsToSet, Transform anchor)
 	{
-
+		TotalSlots.Clear();
 		//Create a circular formation around the point
 		float radius = 1.5f;
 		int angle = 360 / (slotsToSet+1);
