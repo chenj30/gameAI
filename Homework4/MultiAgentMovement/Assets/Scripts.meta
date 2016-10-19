@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+guid: d2456afa067e9c1498e93b8fa16699ef
+folderAsset: yes
+timeCreated: 1476717941
+=======
 guid: 770ca2c59696f8a4b80e5307d8900e41
 folderAsset: yes
 timeCreated: 1476384131
+>>>>>>> origin/homework4
 licenseType: Free
 DefaultImporter:
   userData: 
