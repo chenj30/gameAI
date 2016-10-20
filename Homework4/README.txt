@@ -32,3 +32,9 @@ they will continue to follow the anchor. Once they detect they are going to coll
 the obstacle with reference to the anchor point. 
 PathFollow.cs: this is simply the path definition and following mechanism for the anchor point
 blackbird.cs: just controls the blackbird
+
+Scalable Formation(Johnny)
+
+The formation forms but the collision detection is not quite there.
+For the obstacle avoidance, I tried to use ray casting but it didn't work as expected.
+The heuristics for the agents to go through the tunnel was to use the ray casting and avoid the walls.
