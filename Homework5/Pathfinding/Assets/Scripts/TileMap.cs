@@ -4,27 +4,20 @@ using System.IO;
 
 public class TileMap {
 
-	private byte[] _data;
+	private Vector3[,] _data;
 	private int _width;
-	public int width { get { return _width; } }
+	public int Width { get { return _width; } }
 	private int _height;
-	public int height {  get { return _height; } }
-	private int _numBytes { get { return (_width * _height + 3) >> 2; } } // 2 bits per tile = 4 tiles per byte
+	public int Height {  get { return _height; } }
 
-	public int Get(int x, int y)
+	public Vector3 Get(int x, int y)
 	{
-		int index = x + y * _width;
-		int bits = index >> 2;
-		int offset = (index & 3) << 1;
-		return (_data[bits] >> offset) & 3;
+		return _data[x, y];
 	}
 
 	public void Set(int x, int y, int value)
 	{
-		int index = x + y * _width;
-		int bits = index >> 2;
-		int offset = (index & 3) << 1;
-		_data[bits] = (byte)(_data[bits] & ~(3 << offset) | ((value & 3) << offset));
+		_data[x, y] = new Vector3(x, y, value);
 	}
 
 	public void Clear()
@@ -39,7 +32,7 @@ public class TileMap {
 		Clear();
 		_width = newWidth;
 		_height = newHeight;
-		_data = new byte[_numBytes];
+		_data = new Vector3[_width, _height];
 	}
 
 	public int LoadMap(string filepath)
