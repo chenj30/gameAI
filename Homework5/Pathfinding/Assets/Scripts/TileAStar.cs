@@ -37,15 +37,20 @@ public class TileAStarComparer : IComparer<int>
 // A Star class to hold graph information and run A Star algorithm
 public class TileAStar {
 
-	const int INFINITY = 99999;
+	public const int INFINITY = 99999;
 
 	private int _width;
 	public int Width { get { return _width; } }
 	private int _height;
 	public int Height { get { return _height; } }
 	private TileAStarNode[] _nodes;
-	private int _numNodes;
 	public int NumNodes { get { return _width * _height; } }
+
+	// Gets node at index i
+	public TileAStarNode Get(int i)
+	{
+		return _nodes[i];
+	}
 
 	// Clears graph by emptying list of nodes
 	public void Clear()
@@ -55,21 +60,15 @@ public class TileAStar {
 		_height = 0;
 	}
 
-	// Gets node at index i
-	public TileAStarNode Get(int i)
-	{
-		return _nodes[i];
-	}
-
 	// Checks if specific tile is passable
 	public static bool IsPassable(TileMap tileMap, int minX, int minY, int width, int height)
 	{
-		if (minX + width >= tileMap.width || minY + height >= tileMap.height)
+		if (minX + width >= tileMap.Width || minY + height >= tileMap.Height)
 			return false;
 
-		for (int y = minY; y < Mathf.Min(tileMap.height, minY + height); ++y)
+		for (int y = minY; y < Mathf.Min(tileMap.Height, minY + height); ++y)
 		{
-			for (int x = minX; x < Mathf.Min(tileMap.width, minX + width); ++x)
+			for (int x = minX; x < Mathf.Min(tileMap.Width, minX + width); ++x)
 			{
 				if (tileMap.Get(x, y).z != 0)
 					return false;
@@ -82,14 +81,14 @@ public class TileAStar {
 	// Load graph data from tile map
 	public void LoadFromTileMap(TileMap tileMap, int nodeSizeX, int nodeSizeY)
 	{
-		_width = (tileMap.width + nodeSizeX - 1) / nodeSizeX;
-		_height = (tileMap.height + nodeSizeY - 1) / nodeSizeY;
-		_nodes = new TileAStarNode[_width * _height];
+		_width = (tileMap.Width + nodeSizeX - 1) / nodeSizeX;
+		_height = (tileMap.Height + nodeSizeY - 1) / nodeSizeY;
+		_nodes = new TileAStarNode[Width * Height];
 
 		int index = 0;
-		for (int y = 0; y < _height; ++y)
+		for (int y = 0; y < Height; ++y)
 		{
-			for (int x = 0; x < _width; ++x, ++index)
+			for (int x = 0; x < Width; ++x, ++index)
 			{
 				_nodes[index].x = x;
 				_nodes[index].y = y;

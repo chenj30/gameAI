@@ -9,6 +9,7 @@ public class TileMap {
 	public int Width { get { return _width; } }
 	private int _height;
 	public int Height {  get { return _height; } }
+	private int _dataCount { get { return _width * _height; } }
 
 	public Vector3 Get(int x, int y)
 	{

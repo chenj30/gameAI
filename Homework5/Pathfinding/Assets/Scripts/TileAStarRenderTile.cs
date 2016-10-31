@@ -3,8 +3,8 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class TileMapRenderTile : MonoBehaviour
-{
+public class TileAStarRenderTile : MonoBehaviour {
+
 	private MeshFilter _meshFilter;
 	private MeshRenderer _meshRenderer;
 	private Mesh _mesh;
@@ -16,10 +16,10 @@ public class TileMapRenderTile : MonoBehaviour
 		_mesh = new Mesh();
 	}
 
-	public void Render(TileMap tileMap, int minX, int minY, int width, int height, Material atlasMaterial)
+	public void Render(TileAStar tileAStar, int minX, int minY, int width, int height, int nodeSizeX, int nodeSizeY, float distance, Material atlasMaterial)
 	{
-		width = Mathf.Min(width, tileMap.Width - minX);
-		height = Mathf.Min(height, tileMap.Height - minY);
+		width = Mathf.Min(width, tileAStar.Width - minX);
+		height = Mathf.Min(height, tileAStar.Height - minY);
 
 		const int maxVerts = 65000;
 		if (width * height * 4 > maxVerts)
@@ -38,21 +38,17 @@ public class TileMapRenderTile : MonoBehaviour
 		{
 			for (int x = minX; x < minX + width; ++x, ++index)
 			{
+				int nodeIndex = x + y * tileAStar.Width;
+
 				Color32 c;
-				switch ((int)tileMap.Get(x, y).z)
+				if (tileAStar.Get(nodeIndex).distance < 0.0f)
+					c = Color.clear;
+				else if (tileAStar.Get(nodeIndex).distance >= TileAStar.INFINITY)
+					c = new Color(0.5f, 0.5f, 1.0f, 1.0f);
+				else
 				{
-					case 0:
-						c = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-						break;
-					case 1:
-						c = new Color(0.0f, 0.8f, 0.0f, 1.0f);
-						break;
-					case 2:
-						c = new Color(0.0f, 0.4f, 0.0f, 1.0f);
-						break;
-					default:
-						c = Color.magenta;
-						break;
+					float value = Mathf.Clamp01(tileAStar.Get(nodeIndex).distance / distance);
+					c = new Color(1.0f, value, value, 1.0f);
 				}
 
 				verts[index * 4 + 0] = new Vector3(x, y, 0);

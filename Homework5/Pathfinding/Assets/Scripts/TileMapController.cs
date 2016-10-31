@@ -33,8 +33,6 @@ public class TileMapController : MonoBehaviour
 {
 
 	public string mapFilePath;
-	public Text heuristicTextDisplay;
-	public Text methodTextDisplay;
 	public InputField mapPathInput;
 	public GameObject startPointPrefab;
 	public GameObject endPointPrefab;
@@ -70,6 +68,7 @@ public class TileMapController : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		SetMapPath(mapFilePath);
 		LoadTileMap();
 	}
 
@@ -104,11 +103,9 @@ public class TileMapController : MonoBehaviour
 					break;
 			}
 		}
-	}
 
-	public void SetMapPath(string path)
-	{
-		mapFilePath = path;
+		if (!mapPathInput.isFocused)
+			MoveCamera(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
 	}
 
 	public void LoadTileMap()
@@ -121,7 +118,7 @@ public class TileMapController : MonoBehaviour
 			_aStarControllerTile.Clear();
 			_aStarControllerWaypoint.Clear();
 
-			Camera.main.transform.position = new Vector3(tileMap.width / 2.0f, tileMap.height / 2.0f, -10.0f);
+			Camera.main.transform.position = new Vector3(tileMap.Width / 2.0f, tileMap.Height / 2.0f, -10.0f);
 		}
 	}
 
@@ -130,10 +127,10 @@ public class TileMapController : MonoBehaviour
 		switch (_worldRep)
 		{
 			case WorldRepresenation.Tile:
-				_aStarControllerTile.PerformAStar();
+				_aStarControllerTile.RunAStar();
 				break;
 			case WorldRepresenation.Waypoint:
-				_aStarControllerWaypoint.PerformAStar();
+				_aStarControllerWaypoint.RunAStar();
 				break;
 			default:
 				break;
@@ -156,6 +153,65 @@ public class TileMapController : MonoBehaviour
 		FinishSelection();
 	}
 
+	public void SetHeuristicWeight(float weight)
+	{
+		_aStarControllerTile.SetAStarHeuristicWeight(weight);
+		_aStarControllerWaypoint.SetAStarHeuristicWeight(weight);
+	}
+
+	public void SetAStarHeuristicType(int type)
+	{
+		switch (type)
+		{
+			case 0:
+				_aStarControllerTile.heuristicType = AStarHeuristic.None;
+				_aStarControllerWaypoint.heuristicType = AStarHeuristic.None;
+				break;
+			case 1:
+				_aStarControllerTile.heuristicType = AStarHeuristic.Manhattan;
+				_aStarControllerWaypoint.heuristicType = AStarHeuristic.Manhattan;
+				break;
+			case 2:
+				_aStarControllerTile.heuristicType = AStarHeuristic.Euclidean;
+				_aStarControllerWaypoint.heuristicType = AStarHeuristic.Euclidean;
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void SetWorldRep(int type)
+	{
+		switch (type)
+		{
+			case 0:
+				_worldRep = WorldRepresenation.Tile;
+				break;
+			case 1:
+				_worldRep = WorldRepresenation.Waypoint;
+				break;
+			default:
+				break;
+		}
+
+		_aStarControllerTile.Clear();
+		_aStarControllerWaypoint.Clear();
+	}
+
+	public void SetMapPath(string path)
+	{
+		mapFilePath = path;
+	}
+
+	public void SetTile(int x, int y, int value)
+	{
+		if (x < 0 || y < 0 || x >= tileMap.Width || y >= tileMap.Height) { return; }
+
+		tileMap.Set(x, y, value);
+
+		_renderer.OnChanged(x, y);
+	}
+
 	public void SetNodeWidth(float width)
 	{
 		_aStarControllerTile.nodeSizeX = Mathf.RoundToInt(width);
@@ -167,47 +223,6 @@ public class TileMapController : MonoBehaviour
 		_aStarControllerTile.nodeSizeY = Mathf.RoundToInt(height);
 		_aStarControllerWaypoint.nodeSizeY = Mathf.RoundToInt(height);
 	}
-
-	public void SetTile(int x, int y, int value)
-	{
-		if (x < 0 || y < 0 || x >= tileMap.width || y >= tileMap.height) { return; }
-
-		tileMap.Set(x, y, value);
-
-		_renderer.OnChanged(x, y);
-	}
-
-	public void SetHeuristicWeight(float weight)
-	{
-		_aStarControllerTile.SetAStarHeuristicWeight(weight);
-		_aStarControllerWaypoint.SetAStarHeuristicWeight(weight);
-	}
-
-	public void SetAStarHeuristicType(float type)
-	{
-		switch (Mathf.RoundToInt(type * 2.0f))
-		{
-			case 0:
-				_aStarControllerTile.Heuristic = AStarHeuristic.None;
-				_aStarControllerWaypoint.heuristic = AStarHeuristic.None;
-				heuristicTextDisplay.text = "None";
-				break;
-			case 1:
-				_aStarControllerTile.heuristic = AStarHeuristic.Manhattan;
-				_aStarControllerWaypoint.heuristic = AStarHeuristic.Manhattan;
-				heuristicTextDisplay.text = "Manhattan";
-				break;
-			case 2:
-				_aStarControllerTile.heuristic = AStarHeuristic.Euclidean;
-				_aStarControllerWaypoint.heuristic = AStarHeuristic.Euclidean;
-				heuristicTextDisplay.text = "Euclidean";
-				break;
-			default:
-				break;
-		}
-	}
-
-	
 
 	public void FinishSelection()
 	{
@@ -232,5 +247,19 @@ public class TileMapController : MonoBehaviour
 	public void RemoveObstaclesSelection()
 	{
 		_guiState = GUIState.RemoveObstacles;
+	}
+
+	public void MoveCamera(Vector2 delta)
+	{
+		if (delta.magnitude == 0.0f)
+			return;
+
+		const float cameraSpeed = 50.0f;
+		delta *= cameraSpeed * Time.deltaTime / delta.magnitude;
+		Camera.main.transform.position = new Vector3(
+			Mathf.Clamp(Camera.main.transform.position.x + delta.x, 0, tileMap.Width),
+			Mathf.Clamp(Camera.main.transform.position.y + delta.y, 0, tileMap.Height),
+			-10.0f
+		);
 	}
 }
