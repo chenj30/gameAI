@@ -110,6 +110,7 @@ public class TileMapController : MonoBehaviour
 
 	public void LoadTileMap()
 	{
+		SetMapPath(mapFilePath);
 		if (tileMap.LoadMap(mapFilePath) == 0)
 		{
 			_renderer.Clear();
@@ -201,6 +202,7 @@ public class TileMapController : MonoBehaviour
 	public void SetMapPath(string path)
 	{
 		mapFilePath = path;
+		Debug.Log(mapFilePath);
 	}
 
 	public void SetTile(int x, int y, int value)
