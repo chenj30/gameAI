@@ -23,7 +23,7 @@ public class TileAStarRenderer : MonoBehaviour {
 		_renderRoot = new GameObject();
 		_renderRoot.name = "Tile A* Render Root";
 		_renderRoot.transform.SetParent(this.transform);
-		_renderRoot.transform.localPosition = new Vector3(0, 0, 100);
+		_renderRoot.transform.localPosition = new Vector3(0, 105, 100);
 		_rTiles = null;
 		_pathRenderer = null;
 	}

@@ -28,9 +28,9 @@ public class TileAStarRenderTile : MonoBehaviour {
 			return;
 		}
 
-		Vector3[] verts = new Vector3[width * height * 4];
-		Vector2[] uvs = new Vector2[width * height * 4];
-		Color32[] colors = new Color32[width * height * 4];
+		Vector3[] verts = new Vector3[width * height * 8];
+		Vector2[] uvs = new Vector2[width * height * 8];
+		Color32[] colors = new Color32[width * height * 8];
 		int[] tris = new int[width * height * 6];
 
 		int index = 0;
@@ -44,7 +44,7 @@ public class TileAStarRenderTile : MonoBehaviour {
 				if (tileAStar.Get(nodeIndex).distance < 0.0f)
 					c = Color.clear;
 				else if (tileAStar.Get(nodeIndex).distance >= TileAStar.INFINITY)
-					c = new Color(0.5f, 0.5f, 1.0f, 1.0f);
+					c = new Color(0f, 0.1f, .4f, 1.0f);
 				else
 				{
 					float value = Mathf.Clamp01(tileAStar.Get(nodeIndex).distance / distance);

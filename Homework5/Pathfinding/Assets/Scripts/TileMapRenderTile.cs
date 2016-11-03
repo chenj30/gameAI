@@ -28,9 +28,9 @@ public class TileMapRenderTile : MonoBehaviour
 			return;
 		}
 
-		Vector3[] verts = new Vector3[width * height * 4];
-		Vector2[] uvs = new Vector2[width * height * 4];
-		Color32[] colors = new Color32[width * height * 4];
+		Vector3[] verts = new Vector3[width * height * 8];
+		Vector2[] uvs = new Vector2[width * height * 8];
+		Color32[] colors = new Color32[width * height * 8];
 		int[] tris = new int[width * height * 6];
 
 		int index = 0;
@@ -42,13 +42,13 @@ public class TileMapRenderTile : MonoBehaviour
 				switch ((int)tileMap.Get(x, y).z)
 				{
 					case 0:
-						c = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+						c = new Color(.5f, .5f, .5f, 1.0f);
 						break;
 					case 1:
-						c = new Color(0.0f, 0.8f, 0.0f, 1.0f);
+						c = new Color(0.5f, 1.0f, 0f, 1.0f);
 						break;
 					case 2:
-						c = new Color(0.0f, 0.4f, 0.0f, 1.0f);
+						c = new Color(0.0f, 0.1f, 0.1f, 1.0f);
 						break;
 					default:
 						c = Color.magenta;
