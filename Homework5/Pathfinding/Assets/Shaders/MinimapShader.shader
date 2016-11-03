@@ -1,4 +1,4 @@
-﻿Shader "Custom/AStarShader" {
+﻿Shader "Custom/MinimapShader" {
 	SubShader {
 		Tags { "Queue"="Transparent" "RenderType"="Transparent" }
 		Pass {

@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class TileAStarRenderTile : MonoBehaviour {
+public class MinimapTileRenderer_Tile : MonoBehaviour {
 
 	private MeshFilter _meshFilter;
 	private MeshRenderer _meshRenderer;

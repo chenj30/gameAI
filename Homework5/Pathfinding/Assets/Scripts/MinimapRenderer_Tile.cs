@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class TileAStarRenderer : MonoBehaviour {
+public class MinimapRenderer_Tile : MonoBehaviour {
 
 	public int rTileSizeX = 32;
 	public int rTileSizeY = 32;
@@ -12,16 +12,16 @@ public class TileAStarRenderer : MonoBehaviour {
 	public int NumTilesX { get { return (_aStarController.tileAStar.Width + rTileSizeX - 1) / rTileSizeX; } }
 	public int NumTilesY { get { return (_aStarController.tileAStar.Height + rTileSizeY - 1) / rTileSizeY; } }
 
-	private TileAStarController _aStarController;
+	private MinimapController_Tile _aStarController;
 	private GameObject _renderRoot;
-	private TileAStarRenderTile[] _rTiles;
-	private TileAStarPathRenderer _pathRenderer;
+	private MinimapTileRenderer_Tile[] _rTiles;
+	private MinimapPathRenderer_Tile _pathRenderer;
 
 	public void Awake()
 	{
-		_aStarController = GetComponent<TileAStarController>();
+		_aStarController = GetComponent<MinimapController_Tile>();
 		_renderRoot = new GameObject();
-		_renderRoot.name = "Tile A* Render Root";
+		_renderRoot.name = "(MiniMap) Tile A* Render Root";
 		_renderRoot.transform.SetParent(this.transform);
 		_renderRoot.transform.localPosition = new Vector3(0, 105, 100);
 		_rTiles = null;
@@ -33,7 +33,7 @@ public class TileAStarRenderer : MonoBehaviour {
 	{
 		if (_rTiles != null)
 		{
-			foreach (TileAStarRenderTile rTile in _rTiles)
+			foreach (MinimapTileRenderer_Tile rTile in _rTiles)
 			{
 				GameObject.Destroy(rTile.gameObject);
 			}
@@ -54,15 +54,15 @@ public class TileAStarRenderer : MonoBehaviour {
 		float distance = _aStarController.tileAStar.Get(endIndex).distance;
 
 		// Tile
-		_rTiles = new TileAStarRenderTile[NumTilesX * NumTilesY];
+		_rTiles = new MinimapTileRenderer_Tile[NumTilesX * NumTilesY];
 		int index = 0;
 		for (int y = 0; y < NumTilesY; ++y)
 		{
 			for (int x = 0; x < NumTilesX; ++x, ++index)
 			{
 				GameObject rTileGO = new GameObject();
-				rTileGO.name = "Tile A* Render tile " + x + "," + y;
-				TileAStarRenderTile rTile = rTileGO.AddComponent<TileAStarRenderTile>();
+				rTileGO.name = "(MiniMap)Tile A* Render tile " + x + "," + y;
+				MinimapTileRenderer_Tile rTile = rTileGO.AddComponent<MinimapTileRenderer_Tile>();
 				rTile.Render(_aStarController.tileAStar, x * rTileSizeX, y * rTileSizeY, rTileSizeX, rTileSizeY, _aStarController.nodeSizeX, _aStarController.nodeSizeY, distance, aStarMat);
 				_rTiles[index] = rTile;
 				rTileGO.transform.SetParent(_renderRoot.transform);
@@ -72,8 +72,8 @@ public class TileAStarRenderer : MonoBehaviour {
 
 		// Path
 		GameObject pathRendererGO = new GameObject();
-		pathRendererGO.name = "Tile A* Path Renderer";
-		_pathRenderer = pathRendererGO.AddComponent<TileAStarPathRenderer>();
+		pathRendererGO.name = "(MiniMap)Tile A* Path Renderer";
+		_pathRenderer = pathRendererGO.AddComponent<MinimapPathRenderer_Tile>();
 		_pathRenderer.Render(_aStarController.tileAStar, endX, endY, _aStarController.nodeSizeX, _aStarController.nodeSizeY, pathMat);
 		pathRendererGO.transform.SetParent(_renderRoot.transform);
 		pathRendererGO.transform.localPosition = Vector3.zero;

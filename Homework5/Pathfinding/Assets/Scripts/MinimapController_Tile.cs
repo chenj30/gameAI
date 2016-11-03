@@ -2,18 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(WaypointAStarRenderer))]
-public class WaypointAStarController : MonoBehaviour {
+[RequireComponent(typeof(MinimapRenderer_Tile))]
+public class MinimapController_Tile : MonoBehaviour {
 
 	public int nodeSizeX = 2;
 	public int nodeSizeY = 2;
 	public AStarHeuristic heuristicType;
 	public float heuristicWeight = 1;
 
-	public WaypointAStar waypointAStar;
+	public TileAStar tileAStar;
 
 	private TileMapController _controller;
-	private WaypointAStarRenderer _renderer;
+	private MinimapRenderer_Tile _renderer;
 	private int _startX;
 	private int _startY;
 	private int _endX;
@@ -21,16 +21,16 @@ public class WaypointAStarController : MonoBehaviour {
 
 	public void Awake()
 	{
-		waypointAStar = new WaypointAStar();
+		tileAStar = new TileAStar();
 
 		_controller = GetComponent<TileMapController>();
-		_renderer = GetComponent<WaypointAStarRenderer>();
+		_renderer = GetComponent<MinimapRenderer_Tile>();
 	}
 
 	// Clears the tile data and renderer data
 	public void Clear()
 	{
-		waypointAStar.Clear();
+		tileAStar.Clear();
 		_renderer.Clear();
 	}
 
@@ -45,8 +45,8 @@ public class WaypointAStarController : MonoBehaviour {
 		Clear();
 
 		// A*
-		waypointAStar.LoadFromTileMap(_controller.tileMap, nodeSizeX, nodeSizeY);
-		waypointAStar.RunAStar(startX, startY, endX, endY, heuristicType, heuristicWeight);
+		tileAStar.LoadFromTileMap(_controller.tileMap, nodeSizeX, nodeSizeY);
+		tileAStar.RunAStar(startX, startY, endX, endY, heuristicType, heuristicWeight);
 
 		// Render
 		_renderer.Render(startX, startY, endX, endY);
@@ -68,4 +68,6 @@ public class WaypointAStarController : MonoBehaviour {
 	{
 		heuristicWeight = weight;
 	}
+
+
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class WaypointAStarRenderTile : MonoBehaviour {
+public class MinimapTileRenderer_Waypoint : MonoBehaviour {
 
 	private MeshFilter _meshFilter;
 	private MeshRenderer _meshRenderer;
@@ -16,7 +16,7 @@ public class WaypointAStarRenderTile : MonoBehaviour {
 		_mesh = new Mesh();
 	}
 
-	public void Render(WaypointAStar waypointAStar, int startNode, int nodeCount, int nodeSizeX, int nodeSizeY, float distance, Material aStarMaterial)
+	public void Render(Minimap_Waypoint waypointAStar, int startNode, int nodeCount, int nodeSizeX, int nodeSizeY, float distance, Material aStarMaterial)
 	{
 		nodeCount = Mathf.Min(nodeCount, waypointAStar.NumNodes - startNode);
 
@@ -44,7 +44,7 @@ public class WaypointAStarRenderTile : MonoBehaviour {
 			Color32 c;
 			if (waypointAStar.Get(index).distance < 0.0f)
 				c = Color.clear;
-			else if (waypointAStar.Get(index).distance >= WaypointAStar.INFINITY)
+			else if (waypointAStar.Get(index).distance >= Minimap_Waypoint.INFINITY)
 				c = new Color(0.5f, 0.5f, 1.0f, 1.0f);
 			else
 			{

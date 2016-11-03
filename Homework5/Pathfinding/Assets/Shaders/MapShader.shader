@@ -1,4 +1,4 @@
-Shader "Custom/RenderShader" {
+Shader "Custom/MapShader" {
 	SubShader {
 		Tags { "Queue"="Transparent" "RenderType"="Transparent" }
 		Pass {

@@ -17,10 +17,10 @@ public struct WaypointAStarNode
 // comparer class to use with queue
 public class WaypointAStarComparer : IComparer<int>
 {
-	private WaypointAStar _waypointAStar;
+	private Minimap_Waypoint _waypointAStar;
 	private float _heuristicWeight;
 
-	public WaypointAStarComparer(WaypointAStar waypointAStar, float heuristicWeight)
+	public WaypointAStarComparer(Minimap_Waypoint waypointAStar, float heuristicWeight)
 	{
 		_waypointAStar = waypointAStar;
 		_heuristicWeight = heuristicWeight;
@@ -36,7 +36,7 @@ public class WaypointAStarComparer : IComparer<int>
 	}
 }
 
-public class WaypointAStar {
+public class Minimap_Waypoint {
 
 	public const int INFINITY = 99999;
 

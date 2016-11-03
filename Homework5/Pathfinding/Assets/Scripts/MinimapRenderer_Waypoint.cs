@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WaypointAStarRenderer : MonoBehaviour {
+public class MinimapRenderer_Waypoint : MonoBehaviour {
 
 	public int nodesPerTile = 1024;
 	public Material aStarMat;
 	public Material pathMat;
 	public int NumTiles {  get { return (_aStarController.waypointAStar.NumNodes + nodesPerTile - 1) / nodesPerTile; } }
 
-	private WaypointAStarController _aStarController;
+	private MinimapController_Waypoint _aStarController;
 	private GameObject _renderRoot;
-	private WaypointAStarRenderTile[] _rTiles;
-	private WaypointAStarPathRenderer _pathRenderer;
+	private MinimapTileRenderer_Waypoint[] _rTiles;
+	private MinimapPathRenderer_Waypoint _pathRenderer;
 
 	public void Awake()
 	{
-		_aStarController = GetComponent<WaypointAStarController>();
+		_aStarController = GetComponent<MinimapController_Waypoint>();
 		_renderRoot = new GameObject();
 		_renderRoot.name = "Waypoint A* Render Root";
 		_renderRoot.transform.SetParent(this.transform);
@@ -29,7 +29,7 @@ public class WaypointAStarRenderer : MonoBehaviour {
 	{
 		if (_rTiles != null)
 		{
-			foreach (WaypointAStarRenderTile rTile in _rTiles)
+			foreach (MinimapTileRenderer_Waypoint rTile in _rTiles)
 			{
 				GameObject.Destroy(rTile.gameObject);
 			}
@@ -51,12 +51,12 @@ public class WaypointAStarRenderer : MonoBehaviour {
 		float distance = _aStarController.waypointAStar.Get(endIndex).distance;
 
 		// Tile
-		_rTiles = new WaypointAStarRenderTile[NumTiles];
+		_rTiles = new MinimapTileRenderer_Waypoint[NumTiles];
 		for (int i = 0; i < NumTiles; ++i)
 		{
 			GameObject rTileGO = new GameObject();
 			rTileGO.name = "Waypoint A* Render tile " + i;
-			WaypointAStarRenderTile rTile = rTileGO.AddComponent<WaypointAStarRenderTile>();
+			MinimapTileRenderer_Waypoint rTile = rTileGO.AddComponent<MinimapTileRenderer_Waypoint>();
 			rTile.Render(_aStarController.waypointAStar, i * nodesPerTile, nodesPerTile, _aStarController.nodeSizeX, _aStarController.nodeSizeY, distance, aStarMat);
 
 			_rTiles[i] = rTile;
@@ -67,7 +67,7 @@ public class WaypointAStarRenderer : MonoBehaviour {
 		// Path
 		GameObject pathRendererGO = new GameObject();
 		pathRendererGO.name = "Tile A* Path Renderer";
-		_pathRenderer = pathRendererGO.AddComponent<WaypointAStarPathRenderer>();
+		_pathRenderer = pathRendererGO.AddComponent<MinimapPathRenderer_Waypoint>();
 		_pathRenderer.Render(_aStarController.waypointAStar, startX, startY, endX, endY, _aStarController.nodeSizeX, _aStarController.nodeSizeY, pathMat);
 		pathRendererGO.transform.SetParent(_renderRoot.transform);
 		pathRendererGO.transform.localPosition = Vector3.zero;

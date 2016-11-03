@@ -27,8 +27,8 @@ public enum AStarHeuristic
 }
 
 [RequireComponent(typeof(TileMapRenderer))]
-[RequireComponent(typeof(TileAStarController))]
-[RequireComponent(typeof(WaypointAStarController))]
+[RequireComponent(typeof(MinimapController_Tile))]
+[RequireComponent(typeof(MinimapController_Waypoint))]
 public class TileMapController : MonoBehaviour
 {
 
@@ -40,8 +40,8 @@ public class TileMapController : MonoBehaviour
 	public TileMap tileMap;
 
 	private TileMapRenderer _renderer;
-	private TileAStarController _aStarControllerTile;
-	private WaypointAStarController _aStarControllerWaypoint;
+	private MinimapController_Tile _aStarControllerTile;
+	private MinimapController_Waypoint _aStarControllerWaypoint;
 	private GameObject _startPointGO;
 	private GameObject _endPointGO;
 	private GUIState _guiState;
@@ -52,8 +52,8 @@ public class TileMapController : MonoBehaviour
 		tileMap = new TileMap();
 
 		_renderer = GetComponent<TileMapRenderer>();
-		_aStarControllerTile = GetComponent<TileAStarController>();
-		_aStarControllerWaypoint = GetComponent<WaypointAStarController>();
+		_aStarControllerTile = GetComponent<MinimapController_Tile>();
+		_aStarControllerWaypoint = GetComponent<MinimapController_Waypoint>();
 
 		_startPointGO = GameObject.Instantiate(startPointPrefab);
 		_startPointGO.transform.SetParent(transform);

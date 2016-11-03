@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class WaypointAStarPathRenderer : MonoBehaviour {
+
+[RequireComponent(typeof(LineRenderer))]
+public class MinimapPathRenderer_Waypoint : MonoBehaviour {
 
 	private LineRenderer _lineRenderer;
 
@@ -10,7 +12,7 @@ public class WaypointAStarPathRenderer : MonoBehaviour {
 		_lineRenderer = GetComponent<LineRenderer>();
 	}
 
-	private Vector3 GetIndexCoords(WaypointAStar waypointAStar, int index, int nodeSizeX, int nodeSizeY)
+	private Vector3 GetIndexCoords(Minimap_Waypoint waypointAStar, int index, int nodeSizeX, int nodeSizeY)
 	{
 		return new Vector3(
 			(waypointAStar.Get(index).x + waypointAStar.Get(index).size / 2.0f) * nodeSizeX,
@@ -19,7 +21,7 @@ public class WaypointAStarPathRenderer : MonoBehaviour {
 		);
 	}
 
-	public void Render(WaypointAStar waypointAStar, int startX, int startY, int endX, int endY, int nodeSizeX, int nodeSizeY, Material pathMaterial)
+	public void Render(Minimap_Waypoint waypointAStar, int startX, int startY, int endX, int endY, int nodeSizeX, int nodeSizeY, Material pathMaterial)
 	{
 		List<Vector3> path = new List<Vector3>();
 		int index = waypointAStar.FindContainingNode(endX, endY);

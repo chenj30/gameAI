@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
-public class TileAStarPathRenderer : MonoBehaviour {
+public class MinimapPathRenderer_Tile : MonoBehaviour {
 
 	private LineRenderer _lineRenderer;
 
